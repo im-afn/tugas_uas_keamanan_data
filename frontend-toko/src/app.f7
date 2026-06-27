@@ -1,0 +1,10 @@
+<template>
+  <div id="app">
+    <div class="view view-main view-init safe-areas" data-url="/login/"></div>
+  </div>
+</template>
+<script>
+  export default () => {
+    return $render;
+  };
+</script>

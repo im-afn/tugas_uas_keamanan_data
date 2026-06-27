@@ -1,0 +1,209 @@
+<template>
+  <div class="page" data-name="barang-edit">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Edit Barang</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div id="loading-edit" style="text-align: center; padding: 50px">
+        <div class="preloader"></div>
+        <p style="color: #95a5a6">Memuat data...</p>
+      </div>
+
+      <div id="form-edit" style="margin: 15px; display: none">
+        <div style="text-align: center; margin-bottom: 20px">
+          <i class="icon material-icons" style="font-size: 60px; color: #f39c12"
+            >edit_note</i
+          >
+          <p style="color: #7f8c8d; font-size: 13px">Edit data barang</p>
+        </div>
+
+        <div class="card" style="border-radius: 12px">
+          <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-media">
+                  <i class="icon material-icons">qr_code</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Kode Barang</div>
+                  <div class="item-input-wrap">
+                    <input type="text" id="txt-kode-edit" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">inventory_2</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Nama Barang</div>
+                  <div class="item-input-wrap">
+                    <input type="text" id="txt-nama-edit" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input" style="margin-top: 10px">
+                <div class="item-media">
+                  <i class="icon material-icons">straighten</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Satuan</div>
+                  <div class="item-input-wrap">
+                    <select id="cbo-satuan-edit">
+                      <option value="pcs">Pcs</option>
+                      <option value="kg">Kg</option>
+                      <option value="liter">Liter</option>
+                      <option value="dus">Dus</option>
+                      <option value="pack">Pack</option>
+                      <option value="botol">Botol</option>
+                      <option value="sachet">Sachet</option>
+                    </select>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">attach_money</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Harga Modal</div>
+                  <div class="item-input-wrap">
+                    <input type="number" id="txt-harga-modal-edit" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">sell</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Harga Jual</div>
+                  <div class="item-input-wrap">
+                    <input type="number" id="txt-harga-jual-edit" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">warning</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Stok Minimal</div>
+                  <div class="item-input-wrap">
+                    <input type="number" id="txt-stok-minimal-edit" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <button
+          class="button button-fill button-round button-large"
+          style="background-color: #f39c12; margin-top: 20px"
+          id="btn-update-barang"
+        >
+          <i class="icon material-icons">check</i> Update Barang
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { barang as barangApi } from "../js/api.js";
+
+  export default (props, { $, $f7, $f7route }) => {
+    const loadBarang = async () => {
+      $("#loading-edit").show();
+      $("#form-edit").hide();
+
+      try {
+        const response = await barangApi.getById($f7route.params.id);
+        if (response.status === "sukses") {
+          const b = response.data;
+          $("#txt-kode-edit").val(b.kode || "");
+          $("#txt-nama-edit").val(b.nama || "");
+          $("#cbo-satuan-edit").val(b.satuan || "pcs");
+          $("#txt-harga-modal-edit").val(b.harga_modal || 0);
+          $("#txt-harga-jual-edit").val(b.harga_jual || 0);
+          $("#txt-stok-minimal-edit").val(b.stok_minimal || 5);
+
+          $("#loading-edit").hide();
+          $("#form-edit").show();
+        }
+      } catch (err) {
+        $f7.dialog.alert("Gagal mengambil data barang", "Error");
+      }
+    };
+
+    const update = async () => {
+      const kode = $("#txt-kode-edit").val().trim();
+      const nama = $("#txt-nama-edit").val().trim();
+      const satuan = $("#cbo-satuan-edit").val();
+      const harga_modal = parseFloat($("#txt-harga-modal-edit").val()) || 0;
+      const harga_jual = parseFloat($("#txt-harga-jual-edit").val()) || 0;
+      const stok_minimal = parseInt($("#txt-stok-minimal-edit").val()) || 5;
+
+      if (!kode || !nama) {
+        $f7.dialog.alert("Kode dan Nama barang wajib diisi", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Mengupdate...");
+
+      try {
+        const response = await barangApi.update($f7route.params.id, {
+          kode,
+          nama,
+          satuan,
+          harga_modal,
+          harga_jual,
+          stok_minimal,
+        });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          $f7.dialog.alert("Barang berhasil diupdate", "Sukses", () => {
+            $f7.back();
+          });
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal mengupdate barang", "Error");
+      }
+    };
+
+    $f7.on("pageInit", () => {
+      loadBarang();
+      $("#btn-update-barang").on("click", update);
+    });
+
+    return $render;
+  };
+</script>

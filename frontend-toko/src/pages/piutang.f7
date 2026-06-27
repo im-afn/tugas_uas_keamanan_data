@@ -1,0 +1,182 @@
+<template>
+  <div class="page" data-name="piutang">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Piutang</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div
+        id="loading-piutang"
+        style="text-align: center; padding: 50px; display: none"
+      >
+        <div class="preloader"></div>
+      </div>
+
+      <div id="ringkasan-piutang" style="margin: 15px; display: none">
+        <div class="row">
+          <div class="col-50" style="padding-right: 5px">
+            <div
+              class="card card-raised"
+              style="border-radius: 12px; background-color: #e74c3c"
+            >
+              <div
+                class="card-content"
+                style="padding: 14px; text-align: center; color: white"
+              >
+                <div style="font-size: 11px">Total Piutang</div>
+                <div
+                  id="txt-total-piutang"
+                  style="font-size: 18px; font-weight: bold"
+                >
+                  Rp 0
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-50" style="padding-left: 5px">
+            <div
+              class="card card-raised"
+              style="border-radius: 12px; background-color: #f39c12"
+            >
+              <div
+                class="card-content"
+                style="padding: 14px; text-align: center; color: white"
+              >
+                <div style="font-size: 11px">Total Bon</div>
+                <div
+                  id="txt-total-bon"
+                  style="font-size: 18px; font-weight: bold"
+                >
+                  0
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="empty-piutang"
+        style="text-align: center; padding: 30px; display: none"
+      >
+        <i class="icon material-icons" style="font-size: 60px; color: #27ae60"
+          >check_circle</i
+        >
+        <p style="color: #95a5a6">Tidak ada piutang yang belum lunas</p>
+      </div>
+
+      <div id="list-piutang" style="margin: 0 15px"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { pembayaran as pembayaranApi } from "../js/api.js";
+  import { formatRupiah } from "../js/function.js";
+
+  export default (props, { $, $f7 }) => {
+    let piutangData = null;
+
+    const renderPiutang = () => {
+      if (!piutangData) return;
+
+      $("#ringkasan-piutang").show();
+      $("#txt-total-piutang").text(
+        "Rp " + formatRupiah(piutangData.total_piutang),
+      );
+      $("#txt-total-bon").text(piutangData.total_bon);
+
+      const container = $("#list-piutang");
+      container.empty();
+
+      if (piutangData.detail.length === 0) {
+        $("#empty-piutang").show();
+      } else {
+        $("#empty-piutang").hide();
+
+        piutangData.detail.forEach((item, idx) => {
+          container.append(`
+          <div class="card" style="border-radius: 12px; margin-bottom: 8px;">
+            <div class="card-content" style="padding: 14px 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="flex: 1;">
+                  <div style="font-weight: bold; font-size: 15px; color: #2c3e50;">${item.pelanggan}</div>
+                  <div style="font-size: 11px; color: #7f8c8d; margin-top: 2px;">${item.no_transaksi}</div>
+                  <div style="font-size: 11px; color: #95a5a6;">${item.umur_hari} hari lalu</div>
+                  <div style="font-weight: bold; color: #e74c3c; margin-top: 5px;">Rp ${formatRupiah(item.total)}</div>
+                </div>
+                <div>
+                  <button class="button button-fill button-round btn-lunasi" data-idx="${idx}" style="background-color: #27ae60; padding: 0 12px; height: 30px; font-size: 12px;">
+                    <i class="icon material-icons" style="font-size: 16px;">check</i> Lunasi
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+        });
+
+        $(".btn-lunasi")
+          .off("click")
+          .on("click", function (e) {
+            e.preventDefault();
+            const idx = parseInt($(this).data("idx"));
+            const data = piutangData.detail[idx];
+
+            $f7.dialog.confirm(
+              `Lunasi bon dari "${data.pelanggan}"?<br><br>No: ${data.no_transaksi}<br>Total: Rp ${formatRupiah(data.total)}`,
+              "Konfirmasi Pelunasan",
+              async () => {
+                $f7.dialog.preloader("Memproses...");
+                try {
+                  const response = await pembayaranApi.lunasi(data.id);
+                  $f7.dialog.close();
+                  if (response.status === "sukses") {
+                    $f7.dialog.alert("Pelunasan berhasil", "Sukses", () => {
+                      loadPiutang();
+                    });
+                  }
+                } catch (err) {
+                  $f7.dialog.close();
+                  $f7.dialog.alert(err.message || "Gagal", "Error");
+                }
+              },
+            );
+          });
+      }
+    };
+
+    const loadPiutang = async () => {
+      $("#loading-piutang").show();
+      $("#ringkasan-piutang").hide();
+      $("#empty-piutang").hide();
+      $("#list-piutang").empty();
+
+      try {
+        const response = await pembayaranApi.getPiutang();
+        if (response.status === "sukses") {
+          piutangData = response.data;
+          renderPiutang();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+      $("#loading-piutang").hide();
+    };
+
+    $f7.on("pageInit", () => {
+      loadPiutang();
+    });
+
+    return $render;
+  };
+</script>

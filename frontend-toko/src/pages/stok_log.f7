@@ -1,0 +1,137 @@
+<template>
+  <div class="page" data-name="stok-log">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Riwayat Stok</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div style="margin: 15px 15px 0">
+        <div class="row">
+          <div class="col-50" style="padding-right: 5px">
+            <select
+              id="cbo-filter-jenis"
+              class="input input-outline"
+              style="width: 100%; background: white"
+            >
+              <option value="">Semua Jenis</option>
+              <option value="masuk">Masuk</option>
+              <option value="keluar">Keluar</option>
+              <option value="opname">Opname</option>
+            </select>
+          </div>
+          <div class="col-50" style="padding-left: 5px">
+            <select
+              id="cbo-filter-limit"
+              class="input input-outline"
+              style="width: 100%; background: white"
+            >
+              <option value="20">20 Data</option>
+              <option value="50">50 Data</option>
+              <option value="100">100 Data</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="loading-log"
+        style="text-align: center; padding: 50px; display: none"
+      >
+        <div class="preloader"></div>
+      </div>
+
+      <div
+        id="empty-log"
+        style="text-align: center; padding: 50px; display: none"
+      >
+        <i class="icon material-icons" style="font-size: 60px; color: #bdc3c7"
+          >history</i
+        >
+        <p style="color: #95a5a6">Belum ada riwayat stok</p>
+      </div>
+
+      <div id="list-log" style="margin: 15px"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { stok as stokApi } from "../js/api.js";
+
+  export default (props, { $, $f7 }) => {
+    const loadLog = async () => {
+      $("#loading-log").show();
+      $("#empty-log").hide();
+      $("#list-log").empty();
+
+      try {
+        const jenis = $("#cbo-filter-jenis").val() || "";
+        const limit = $("#cbo-filter-limit").val() || "20";
+        const params = { limit };
+        if (jenis) params.jenis = jenis;
+
+        const response = await stokApi.getLog(params);
+        if (response.status === "sukses") {
+          const data = response.data;
+
+          if (data.length === 0) {
+            $("#empty-log").show();
+          } else {
+            const container = $("#list-log");
+            data.forEach((item) => {
+              const bgColor =
+                item.jenis === "masuk"
+                  ? "#27ae60"
+                  : item.jenis === "keluar"
+                    ? "#e74c3c"
+                    : "#f39c12";
+              const tanda =
+                item.jenis === "masuk"
+                  ? "+"
+                  : item.jenis === "keluar"
+                    ? "-"
+                    : "~";
+
+              container.append(`
+              <div class="card" style="border-radius: 12px; margin-bottom: 8px;">
+                <div class="card-content" style="padding: 12px 16px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-weight: bold; font-size: 14px; color: #2c3e50;">${item.nama_barang}</div>
+                      <div style="font-size: 11px; color: #7f8c8d; margin-top: 2px;">${item.keterangan || "-"}</div>
+                      <div style="font-size: 11px; color: #95a5a6; margin-top: 2px;">${item.oleh} • ${item.created_at}</div>
+                    </div>
+                    <div style="text-align: right;">
+                      <span class="badge" style="background-color: ${bgColor}; padding: 6px 12px; font-size: 13px;">${tanda}${item.jumlah}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `);
+            });
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+      $("#loading-log").hide();
+    };
+
+    $f7.on("pageInit", () => {
+      loadLog();
+      $("#cbo-filter-jenis").on("change", loadLog);
+      $("#cbo-filter-limit").on("change", loadLog);
+    });
+
+    return $render;
+  };
+</script>

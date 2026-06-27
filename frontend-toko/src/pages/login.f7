@@ -1,0 +1,137 @@
+<template>
+  <div class="page" data-name="login">
+    <div class="page-content login-page-content">
+      <div
+        class="text-align-center"
+        style="margin-top: 60px; margin-bottom: 30px"
+      >
+        <div style="font-size: 80px; color: #34495e">
+          <i class="icon material-icons md-80">storefront</i>
+        </div>
+        <h1
+          style="
+            font-size: 28px;
+            font-weight: bold;
+            color: #34495e;
+            margin: 10px 0;
+          "
+        >
+          BerkahPOS
+        </h1>
+        <p style="color: #7f8c8d; font-size: 14px">
+          Point of Sale Toko Sembako
+        </p>
+      </div>
+
+      <div
+        class="list list-strong-ios list-dividers-ios inset-ios"
+        style="margin: 0 20px"
+      >
+        <ul>
+          <li class="item-content item-input item-input-outline">
+            <div class="item-media">
+              <i class="icon material-icons">person</i>
+            </div>
+            <div class="item-inner">
+              <div class="item-input-wrap">
+                <input
+                  type="text"
+                  id="txt-username"
+                  placeholder="Username"
+                  autocomplete="off"
+                />
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+          <li
+            class="item-content item-input item-input-outline"
+            style="margin-top: 10px"
+          >
+            <div class="item-media">
+              <i class="icon material-icons">lock</i>
+            </div>
+            <div class="item-inner">
+              <div class="item-input-wrap">
+                <input
+                  type="password"
+                  id="txt-password"
+                  placeholder="Password"
+                  autocomplete="off"
+                />
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div style="margin: 20px 20px">
+        <button
+          class="button button-fill button-round button-large"
+          style="background-color: #34495e"
+          id="btn-login"
+        >
+          MASUK
+        </button>
+      </div>
+
+      <div class="text-align-center" style="margin-top: 20px">
+        <p style="color: #95a5a6; font-size: 12px">Versi 1.0.0</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { auth, setToken, setUser } from "../js/api.js";
+
+  export default (props, { $, $f7, $store }) => {
+    const login = async () => {
+      const username = $("#txt-username").val().trim();
+      const password = $("#txt-password").val().trim();
+
+      if (!username) {
+        $f7.dialog.alert("Username wajib diisi", "Error");
+        return;
+      }
+      if (!password) {
+        $f7.dialog.alert("Password wajib diisi", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Sedang login...");
+
+      try {
+        const response = await auth.login(username, password);
+        $f7.dialog.close();
+
+        if (response.status === "sukses") {
+          const { token, user } = response.data;
+          await setToken(token);
+          await setUser(user);
+          $store.dispatch("setAuth", { token, user });
+          window.f7.views.main.router.navigate("/beranda/");
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal login. Coba lagi.", "Error");
+      }
+    };
+
+    $f7.on("pageInit", () => {
+      $("#btn-login").on("click", login);
+    });
+
+    return $render;
+  };
+</script>
+
+<style>
+  .login-page-content {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+  }
+  .md-80 {
+    font-size: 80px;
+  }
+</style>

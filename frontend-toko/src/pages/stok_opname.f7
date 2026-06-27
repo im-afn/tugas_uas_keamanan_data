@@ -1,0 +1,238 @@
+<template>
+  <div class="page" data-name="stok-opname">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Stok Opname</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div style="margin: 15px">
+        <div style="text-align: center; margin-bottom: 20px">
+          <i class="icon material-icons" style="font-size: 60px; color: #f39c12"
+            >fact_check</i
+          >
+          <p style="color: #7f8c8d; font-size: 13px">Koreksi stok barang</p>
+        </div>
+
+        <div class="card" style="border-radius: 12px">
+          <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-media">
+                  <i class="icon material-icons">inventory_2</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input
+                      type="text"
+                      id="cari-barang-opname"
+                      placeholder="Cari barang..."
+                      autocomplete="off"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div
+            id="hasil-cari-opname"
+            class="list list-strong-ios list-dividers-ios"
+            style="
+              margin: 0;
+              max-height: 200px;
+              overflow-y: auto;
+              display: none;
+            "
+          >
+            <ul id="ul-hasil-cari-opname"></ul>
+          </div>
+        </div>
+
+        <div
+          id="card-opname"
+          class="card"
+          style="border-radius: 12px; margin-top: 15px; display: none"
+        >
+          <div
+            class="card-header"
+            style="font-weight: bold; color: #2c3e50"
+            id="nama-barang-opname"
+          ></div>
+          <div class="card-content" style="padding: 16px">
+            <div style="text-align: center; margin-bottom: 15px">
+              <div style="color: #7f8c8d; font-size: 13px">Stok Saat Ini</div>
+              <div
+                id="stok-saat-ini"
+                style="font-size: 36px; font-weight: bold; color: #2c3e50"
+              >
+                0
+              </div>
+              <div
+                id="satuan-opname"
+                style="font-size: 12px; color: #95a5a6"
+              ></div>
+            </div>
+
+            <div
+              class="list list-strong-ios list-dividers-ios"
+              style="margin: 0"
+            >
+              <ul>
+                <li class="item-content item-input item-input-outline">
+                  <div class="item-media">
+                    <i class="icon material-icons">edit</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title item-label">Stok Aktual</div>
+                    <div class="item-input-wrap">
+                      <input
+                        type="number"
+                        id="txt-stok-aktual"
+                        placeholder="0"
+                      />
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+                </li>
+                <li
+                  class="item-content item-input item-input-outline"
+                  style="margin-top: 10px"
+                >
+                  <div class="item-media">
+                    <i class="icon material-icons">description</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title item-label">Keterangan</div>
+                    <div class="item-input-wrap">
+                      <input
+                        type="text"
+                        id="txt-keterangan-opname"
+                        placeholder="Alasan koreksi"
+                      />
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              class="button button-fill button-round button-large"
+              style="background-color: #f39c12; margin-top: 15px"
+              id="btn-simpan-opname"
+            >
+              <i class="icon material-icons">check</i> Simpan Opname
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { barang as barangApi, stok as stokApi } from "../js/api.js";
+
+  export default (props, { $, $f7 }) => {
+    let selectedBarang = null;
+
+    const cariBarang = async (e) => {
+      const keyword = e.target.value.trim();
+      if (keyword.length < 2) {
+        $("#hasil-cari-opname").hide();
+        return;
+      }
+
+      try {
+        const response = await barangApi.getAll({ search: keyword });
+        if (response.status === "sukses") {
+          const ul = $("#ul-hasil-cari-opname");
+          ul.empty();
+
+          response.data.forEach((b, idx) => {
+            ul.append(`
+            <li>
+              <a href="#" class="item-link item-content btn-pilih-opname" data-idx="${idx}">
+                <div class="item-inner">
+                  <div class="item-title">${b.nama}</div>
+                  <div class="item-after" style="font-size: 11px;">Stok: ${b.stok}</div>
+                </div>
+              </a>
+            </li>
+          `);
+          });
+
+          $(".btn-pilih-opname")
+            .off("click")
+            .on("click", function (e) {
+              e.preventDefault();
+              const idx = parseInt($(this).data("idx"));
+              selectedBarang = response.data[idx];
+
+              $("#nama-barang-opname").text(selectedBarang.nama);
+              $("#stok-saat-ini").text(selectedBarang.stok);
+              $("#satuan-opname").text(selectedBarang.satuan);
+              $("#txt-stok-aktual").val("");
+              $("#txt-keterangan-opname").val("");
+              $("#card-opname").show();
+              $("#hasil-cari-opname").hide();
+              $("#cari-barang-opname").val(selectedBarang.nama);
+            });
+
+          $("#hasil-cari-opname").show();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const simpanOpname = async () => {
+      const stok_aktual = parseInt($("#txt-stok-aktual").val());
+      const keterangan = $("#txt-keterangan-opname").val().trim();
+
+      if (isNaN(stok_aktual)) {
+        $f7.dialog.alert("Stok aktual wajib diisi", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Menyimpan...");
+      try {
+        const response = await stokApi.opname({
+          barang_id: selectedBarang.id,
+          stok_aktual: stok_aktual,
+          keterangan: keterangan || undefined,
+        });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          const d = response.data;
+          $f7.dialog.alert(
+            `Opname berhasil!<br>${d.barang}<br>Stok: ${d.stok_lama} → ${d.stok_baru}<br>Selisih: ${d.selisih > 0 ? "+" : ""}${d.selisih}`,
+            "Sukses",
+            () => {
+              $f7.back();
+            },
+          );
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal", "Error");
+      }
+    };
+
+    $f7.on("pageInit", () => {
+      $("#cari-barang-opname").on("input", cariBarang);
+      $("#btn-simpan-opname").on("click", simpanOpname);
+    });
+
+    return $render;
+  };
+</script>

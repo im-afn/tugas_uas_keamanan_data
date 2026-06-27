@@ -1,0 +1,227 @@
+<template>
+  <div class="page" data-name="barang-tambah">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Tambah Barang</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div style="margin: 15px">
+        <div style="text-align: center; margin-bottom: 20px">
+          <i class="icon material-icons" style="font-size: 60px; color: #34495e"
+            >add_shopping_cart</i
+          >
+          <p style="color: #7f8c8d; font-size: 13px">Isi data barang baru</p>
+        </div>
+
+        <div class="card" style="border-radius: 12px">
+          <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-media">
+                  <i class="icon material-icons">qr_code</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Kode Barang</div>
+                  <div class="item-input-wrap">
+                    <input type="text" id="txt-kode" placeholder="BRG001" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">inventory_2</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Nama Barang</div>
+                  <div class="item-input-wrap">
+                    <input
+                      type="text"
+                      id="txt-nama"
+                      placeholder="Nama barang"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input" style="margin-top: 10px">
+                <div class="item-media">
+                  <i class="icon material-icons">straighten</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Satuan</div>
+                  <div class="item-input-wrap">
+                    <select id="cbo-satuan">
+                      <option value="pcs">Pcs</option>
+                      <option value="kg">Kg</option>
+                      <option value="liter">Liter</option>
+                      <option value="dus">Dus</option>
+                      <option value="pack">Pack</option>
+                      <option value="botol">Botol</option>
+                      <option value="sachet">Sachet</option>
+                    </select>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">attach_money</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Harga Modal</div>
+                  <div class="item-input-wrap">
+                    <input type="number" id="txt-harga-modal" placeholder="0" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">sell</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Harga Jual</div>
+                  <div class="item-input-wrap">
+                    <input type="number" id="txt-harga-jual" placeholder="0" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">inventory</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Stok Awal</div>
+                  <div class="item-input-wrap">
+                    <input type="number" id="txt-stok" placeholder="0" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">warning</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Stok Minimal</div>
+                  <div class="item-input-wrap">
+                    <input
+                      type="number"
+                      id="txt-stok-minimal"
+                      placeholder="5"
+                      value="5"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px">
+          <button
+            class="button button-fill button-round button-large"
+            style="background-color: #27ae60; flex: 1"
+            id="btn-simpan-barang"
+          >
+            <i class="icon material-icons">check</i> Simpan
+          </button>
+          <button
+            class="button button-outline button-round button-large"
+            style="flex: 1; color: #e74c3c; border-color: #e74c3c"
+            id="btn-reset-barang"
+          >
+            <i class="icon material-icons">refresh</i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { barang as barangApi } from "../js/api.js";
+
+  export default (props, { $, $f7 }) => {
+    const simpan = async () => {
+      const kode = $("#txt-kode").val().trim();
+      const nama = $("#txt-nama").val().trim();
+      const satuan = $("#cbo-satuan").val();
+      const harga_modal = parseFloat($("#txt-harga-modal").val()) || 0;
+      const harga_jual = parseFloat($("#txt-harga-jual").val()) || 0;
+      const stok = parseInt($("#txt-stok").val()) || 0;
+      const stok_minimal = parseInt($("#txt-stok-minimal").val()) || 5;
+
+      if (!kode || !nama) {
+        $f7.dialog.alert("Kode dan Nama barang wajib diisi", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Menyimpan...");
+
+      try {
+        const response = await barangApi.create({
+          kode,
+          nama,
+          satuan,
+          harga_modal,
+          harga_jual,
+          stok,
+          stok_minimal,
+        });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          $f7.dialog.alert("Barang berhasil ditambahkan", "Sukses", () => {
+            reset();
+            $f7.back();
+          });
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal menambah barang", "Error");
+      }
+    };
+
+    const reset = () => {
+      $("#txt-kode").val("");
+      $("#txt-nama").val("");
+      $("#cbo-satuan").val("pcs");
+      $("#txt-harga-modal").val("");
+      $("#txt-harga-jual").val("");
+      $("#txt-stok").val("");
+      $("#txt-stok-minimal").val("5");
+    };
+
+    $f7.on("pageInit", () => {
+      $("#btn-simpan-barang").on("click", simpan);
+      $("#btn-reset-barang").on("click", reset);
+    });
+
+    return $render;
+  };
+</script>

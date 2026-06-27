@@ -1,0 +1,127 @@
+<template>
+  <div class="page" data-name="tentang">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="title" style="color: white">Tentang</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div style="text-align: center; padding: 40px 20px 20px">
+        <div style="font-size: 80px; color: #34495e; margin-bottom: 15px">
+          <i class="icon material-icons">storefront</i>
+        </div>
+        <h2 style="color: #2c3e50; margin: 0">BerkahPOS</h2>
+        <p style="color: #7f8c8d; font-size: 14px">
+          Point of Sale Toko Sembako
+        </p>
+        <span
+          class="badge"
+          style="
+            background-color: #34495e;
+            padding: 4px 12px;
+            border-radius: 15px;
+          "
+          >v1.0.0</span
+        >
+      </div>
+
+      <div class="card" style="margin: 0 15px; border-radius: 12px">
+        <div class="card-content" style="padding: 16px">
+          <p style="color: #2c3e50; font-size: 14px; text-align: center">
+            Aplikasi kasir dan manajemen stok untuk toko sembako dan kebutuhan
+            pokok.
+          </p>
+          <p
+            style="
+              color: #7f8c8d;
+              font-size: 13px;
+              text-align: center;
+              margin-top: 10px;
+            "
+          >
+            Dibangun dengan Framework7 + Capacitor + Node.js
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 15px; border-radius: 12px">
+        <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+          <ul>
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="icon material-icons">inventory_2</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">Manajemen Barang & Stok</div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="icon material-icons">receipt_long</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">
+                    Transaksi Penjualan (Tunai & Bon)
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="icon material-icons">people</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">Manajemen Pelanggan & Piutang</div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="icon material-icons">bar_chart</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">Laporan Penjualan</div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="icon material-icons">qr_code_scanner</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">Scanner Barcode</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          padding: 20px;
+          color: #95a5a6;
+          font-size: 12px;
+        "
+      >
+        <p>&copy; 2026 BerkahPOS</p>
+        <p>Semua hak dilindungi</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default () => {
+    return $render;
+  };
+</script>

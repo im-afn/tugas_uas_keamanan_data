@@ -1,0 +1,269 @@
+<template>
+  <div class="page" data-name="home">
+    <!-- Side Panel Left -->
+    <div class="panel panel-left panel-floating panel-resizable">
+      <div class="view">
+        <div class="page">
+          <div class="page-content" style="padding-top: 0">
+            <div
+              id="panel-header"
+              style="
+                background-color: #34495e;
+                padding: 20px 15px;
+                color: white;
+                text-align: center;
+              "
+            >
+              <div style="font-size: 50px">
+                <i class="icon material-icons">account_circle</i>
+              </div>
+              <div
+                id="panel-nama"
+                style="font-size: 16px; font-weight: bold; margin-top: 5px"
+              ></div>
+              <div id="panel-role" style="font-size: 12px; opacity: 0.8"></div>
+            </div>
+
+            <div
+              class="list list-strong-ios list-dividers-ios"
+              style="margin-top: 0"
+            >
+              <ul>
+                <li id="menu-barang" style="display: none">
+                  <a href="/barang/" class="item-link panel-close item-content">
+                    <div class="item-media">
+                      <i class="icon material-icons">inventory_2</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Data Barang</div>
+                    </div>
+                  </a>
+                </li>
+                <li id="menu-stok-masuk" style="display: none">
+                  <a
+                    href="/stok/masuk/"
+                    class="item-link panel-close item-content"
+                  >
+                    <div class="item-media">
+                      <i class="icon material-icons">move_to_inbox</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Stok Masuk</div>
+                    </div>
+                  </a>
+                </li>
+                <li id="menu-stok-opname" style="display: none">
+                  <a
+                    href="/stok/opname/"
+                    class="item-link panel-close item-content"
+                  >
+                    <div class="item-media">
+                      <i class="icon material-icons">fact_check</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Stok Opname</div>
+                    </div>
+                  </a>
+                </li>
+                <li id="menu-pelanggan" style="display: none">
+                  <a
+                    href="/pelanggan/"
+                    class="item-link panel-close item-content"
+                  >
+                    <div class="item-media">
+                      <i class="icon material-icons">people</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Pelanggan</div>
+                    </div>
+                  </a>
+                </li>
+                <li id="menu-piutang" style="display: none">
+                  <a
+                    href="/piutang/"
+                    class="item-link panel-close item-content"
+                  >
+                    <div class="item-media">
+                      <i class="icon material-icons">receipt_long</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Piutang</div>
+                    </div>
+                  </a>
+                </li>
+                <li
+                  id="menu-group-manajemen"
+                  style="display: none"
+                  class="list-group-title"
+                >
+                  Manajemen
+                </li>
+                <li id="menu-laporan" style="display: none">
+                  <a
+                    href="/laporan/"
+                    class="item-link panel-close item-content"
+                  >
+                    <div class="item-media">
+                      <i class="icon material-icons">bar_chart</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Laporan</div>
+                    </div>
+                  </a>
+                </li>
+                <li id="menu-user" style="display: none">
+                  <a href="/user/" class="item-link panel-close item-content">
+                    <div class="item-media">
+                      <i class="icon material-icons">manage_accounts</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Manajemen User</div>
+                    </div>
+                  </a>
+                </li>
+                <li id="menu-log" style="display: none">
+                  <a href="/log/" class="item-link panel-close item-content">
+                    <div class="item-media">
+                      <i class="icon material-icons">history</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Log Aktivitas</div>
+                    </div>
+                  </a>
+                </li>
+                <li class="list-group-title">Lainnya</li>
+                <li>
+                  <a
+                    href="/pengaturan/"
+                    class="item-link panel-close item-content"
+                  >
+                    <div class="item-media">
+                      <i class="icon material-icons">settings</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Pengaturan</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="item-link panel-close item-content"
+                    id="btn-logout"
+                  >
+                    <div class="item-media">
+                      <i class="icon material-icons" style="color: #e74c3c"
+                        >logout</i
+                      >
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title" style="color: #e74c3c">
+                        Logout
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Toolbar -->
+    <div class="toolbar toolbar-bottom tabbar tabbar-icons">
+      <div class="toolbar-inner">
+        <div class="toolbar-pane">
+          <a href="/beranda/" class="tab-link tab-link-active">
+            <i class="icon material-icons">dashboard</i>
+            <span class="tabbar-label">Beranda</span>
+          </a>
+          <a href="/transaksi/" class="tab-link">
+            <i class="icon material-icons">receipt_long</i>
+            <span class="tabbar-label">Transaksi</span>
+          </a>
+          <a href="/scanner/" class="tab-link">
+            <i class="icon material-icons">qr_code_scanner</i>
+            <span class="tabbar-label">Scanner</span>
+          </a>
+          <a href="/tentang/" class="tab-link">
+            <i class="icon material-icons">info</i>
+            <span class="tabbar-label">Tentang</span>
+          </a>
+          <a href="javascript:void(0)" id="btn-senter" class="tab-link">
+            <i class="icon material-icons">flashlight_on</i>
+            <span class="tabbar-label">Senter</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Container -->
+    <div class="tabs tabs-routable">
+      <div class="tab page-content" id="view-beranda"></div>
+      <div class="tab page-content" id="view-transaksi"></div>
+      <div class="tab page-content" id="view-scanner"></div>
+      <div class="tab page-content" id="view-tentang"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { clearAuth, auth } from "../js/api.js";
+  import { senter } from "../js/function.js";
+
+  export default (props, { $, $f7, $store }) => {
+    const setupPanel = () => {
+      const user = $store.state.user;
+      if (!user) return;
+
+      $("#panel-nama").text(user.nama_lengkap);
+      $("#panel-role").text(user.role.toUpperCase());
+
+      const role = user.role;
+
+      if (role === "admin" || role === "gudang") {
+        $("#menu-barang").show();
+        $("#menu-stok-masuk").show();
+        $("#menu-stok-opname").show();
+      }
+
+      if (role === "admin" || role === "kasir") {
+        $("#menu-pelanggan").show();
+        $("#menu-piutang").show();
+      }
+
+      if (role === "admin") {
+        $("#menu-group-manajemen").show();
+        $("#menu-laporan").show();
+        $("#menu-user").show();
+        $("#menu-log").show();
+      }
+    };
+
+    const logout = async () => {
+      $f7.dialog.confirm("Yakin ingin logout?", "Logout", async () => {
+        try {
+          await auth.logout();
+        } catch (err) {}
+        await clearAuth();
+        $store.dispatch("clearAuth");
+        $f7.views.main.router.navigate("/login/");
+      });
+    };
+
+    $f7.on("pageInit", () => {
+      // Cek apakah sudah login
+      if (!$store.state.isLoggedIn) {
+        window.f7.views.main.router.navigate("/login/");
+        return;
+      }
+
+      setupPanel();
+      $("#btn-senter").on("click", senter);
+      $("#btn-logout").on("click", logout);
+    });
+
+    return $render;
+  };
+</script>

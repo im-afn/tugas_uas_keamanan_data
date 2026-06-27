@@ -1,0 +1,137 @@
+<template>
+  <div class="page" data-name="scanner">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="title" style="color: white">Scanner</div>
+      </div>
+    </div>
+
+    <div
+      class="page-content"
+      style="
+        background-color: #f5f6fa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div style="text-align: center; padding: 20px">
+        <div style="font-size: 100px; color: #34495e; margin-bottom: 20px">
+          <i class="icon material-icons">qr_code_scanner</i>
+        </div>
+        <h3 style="color: #2c3e50; margin-bottom: 5px">Scan Barcode</h3>
+        <p style="color: #7f8c8d; font-size: 14px">
+          Arahkan kamera ke barcode barang
+        </p>
+      </div>
+
+      <button
+        class="button button-fill button-round button-large"
+        style="background-color: #34495e; width: 80%; margin-bottom: 15px"
+        id="btn-mulai-scan"
+      >
+        <i class="icon material-icons">camera_alt</i> Mulai Scan
+      </button>
+
+      <div
+        id="card-hasil-scan"
+        class="card"
+        style="width: 80%; border-radius: 12px; margin-top: 10px; display: none"
+      >
+        <div class="card-content" style="text-align: center; padding: 16px">
+          <div style="font-size: 12px; color: #7f8c8d">Hasil Scan</div>
+          <div
+            id="txt-hasil-scan"
+            style="
+              font-size: 18px;
+              font-weight: bold;
+              color: #2c3e50;
+              margin-top: 5px;
+            "
+          ></div>
+        </div>
+      </div>
+
+      <div
+        id="card-info-barang"
+        class="card"
+        style="width: 80%; border-radius: 12px; margin-top: 10px; display: none"
+      >
+        <div class="card-content" style="padding: 16px">
+          <div
+            id="txt-nama-barang-scan"
+            style="font-weight: bold; font-size: 16px; color: #2c3e50"
+          ></div>
+          <div
+            id="txt-info-barang-scan"
+            style="color: #7f8c8d; font-size: 13px; margin-top: 5px"
+          ></div>
+          <div
+            id="txt-harga-barang-scan"
+            style="
+              color: #27ae60;
+              font-weight: bold;
+              font-size: 18px;
+              margin-top: 5px;
+            "
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { BarcodeScanner } from "@capacitor-community/barcode-scanner";
+  import { barang as barangApi } from "../js/api.js";
+  import { formatRupiah } from "../js/function.js";
+
+  export default (props, { $, $f7 }) => {
+    const mulaiScan = async () => {
+      try {
+        await BarcodeScanner.checkPermission({ force: true });
+        document.body.style.opacity = "0";
+        const result = await BarcodeScanner.startScan();
+        document.body.style.opacity = "1";
+
+        if (result.hasContent) {
+          $("#card-hasil-scan").show();
+          $("#txt-hasil-scan").text(result.content);
+          $("#card-info-barang").hide();
+
+          try {
+            const response = await barangApi.getAll({ search: result.content });
+            if (response.status === "sukses" && response.data.length > 0) {
+              const b = response.data[0];
+              $("#card-info-barang").show();
+              $("#txt-nama-barang-scan").text(b.nama);
+              $("#txt-info-barang-scan").text(
+                "Kode: " + b.kode + " • Stok: " + b.stok,
+              );
+              $("#txt-harga-barang-scan").text(
+                "Rp " + formatRupiah(b.harga_jual),
+              );
+            }
+          } catch (err) {
+            console.log("Barang tidak ditemukan");
+          }
+        }
+      } catch (err) {
+        document.body.style.opacity = "1";
+        if (err.message !== "Scan cancelled") {
+          $f7.dialog.alert("Gagal melakukan scan", "Error");
+        }
+      } finally {
+        BarcodeScanner.stopScan();
+      }
+    };
+
+    $f7.on("pageInit", () => {
+      $("#btn-mulai-scan").on("click", mulaiScan);
+    });
+
+    return $render;
+  };
+</script>

@@ -1,0 +1,149 @@
+<template>
+  <div class="page" data-name="pelanggan-tambah">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Tambah Pelanggan</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div style="margin: 15px">
+        <div style="text-align: center; margin-bottom: 20px">
+          <i class="icon material-icons" style="font-size: 60px; color: #34495e"
+            >person_add</i
+          >
+          <p style="color: #7f8c8d; font-size: 13px">Isi data pelanggan baru</p>
+        </div>
+
+        <div class="card" style="border-radius: 12px">
+          <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-media">
+                  <i class="icon material-icons">person</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Nama</div>
+                  <div class="item-input-wrap">
+                    <input
+                      type="text"
+                      id="txt-nama-pelanggan"
+                      placeholder="Nama pelanggan"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">phone</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">No HP</div>
+                  <div class="item-input-wrap">
+                    <input
+                      type="tel"
+                      id="txt-nohp-pelanggan"
+                      placeholder="08123456789"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">location_on</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Alamat</div>
+                  <div class="item-input-wrap">
+                    <input
+                      type="text"
+                      id="txt-alamat-pelanggan"
+                      placeholder="Alamat (opsional)"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px">
+          <button
+            class="button button-fill button-round button-large"
+            style="background-color: #27ae60; flex: 1"
+            id="btn-simpan-pelanggan"
+          >
+            <i class="icon material-icons">check</i> Simpan
+          </button>
+          <button
+            class="button button-outline button-round button-large"
+            style="flex: 1; color: #e74c3c; border-color: #e74c3c"
+            id="btn-reset-pelanggan"
+          >
+            <i class="icon material-icons">refresh</i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { pelanggan as pelangganApi } from "../js/api.js";
+
+  export default (props, { $, $f7 }) => {
+    const simpan = async () => {
+      const nama = $("#txt-nama-pelanggan").val().trim();
+      const no_hp = $("#txt-nohp-pelanggan").val().trim();
+      const alamat = $("#txt-alamat-pelanggan").val().trim();
+
+      if (!nama) {
+        $f7.dialog.alert("Nama wajib diisi", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Menyimpan...");
+      try {
+        const response = await pelangganApi.create({ nama, no_hp, alamat });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          $f7.dialog.alert("Pelanggan berhasil ditambahkan", "Sukses", () => {
+            reset();
+            $f7.back();
+          });
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal", "Error");
+      }
+    };
+
+    const reset = () => {
+      $("#txt-nama-pelanggan").val("");
+      $("#txt-nohp-pelanggan").val("");
+      $("#txt-alamat-pelanggan").val("");
+    };
+
+    $f7.on("pageInit", () => {
+      $("#btn-simpan-pelanggan").on("click", simpan);
+      $("#btn-reset-pelanggan").on("click", reset);
+    });
+
+    return $render;
+  };
+</script>

@@ -1,0 +1,717 @@
+<template>
+  <div class="page" data-name="transaksi">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="title" style="color: white">Transaksi Baru</div>
+        <div class="right">
+          <a
+            href="#"
+            class="link icon-only"
+            id="btn-reset"
+            style="color: white"
+          >
+            <i class="icon material-icons">refresh</i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="page-content"
+      style="background-color: #f5f6fa; padding-bottom: 80px"
+    >
+      <form
+        class="searchbar searchbar-init"
+        style="
+          margin: 10px 15px;
+          --f7-searchbar-bg-color: #fff;
+          border-radius: 12px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <div class="searchbar-inner">
+          <div class="searchbar-input-wrap">
+            <input
+              type="search"
+              placeholder="Cari barang..."
+              id="search-barang"
+              autocomplete="off"
+            />
+            <i class="searchbar-icon"></i>
+            <span class="input-clear-button"></span>
+          </div>
+        </div>
+      </form>
+
+      <div
+        id="hasil-cari"
+        class="card"
+        style="margin: 0 15px 10px; border-radius: 12px; display: none"
+      >
+        <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+          <ul id="ul-hasil-cari"></ul>
+        </div>
+      </div>
+
+      <div style="margin: 0 15px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+          "
+        >
+          <span style="font-weight: bold; font-size: 16px; color: #2c3e50">
+            <i
+              class="icon material-icons"
+              style="font-size: 20px; vertical-align: middle"
+              >shopping_cart</i
+            >
+            Keranjang (<span id="jml-keranjang">0</span>)
+          </span>
+          <a
+            href="#"
+            id="btn-kosongkan"
+            style="color: #e74c3c; font-size: 12px; display: none"
+            >Kosongkan</a
+          >
+        </div>
+
+        <div
+          id="empty-keranjang"
+          class="card"
+          style="border-radius: 12px; text-align: center; padding: 30px"
+        >
+          <i class="icon material-icons" style="font-size: 60px; color: #bdc3c7"
+            >shopping_basket</i
+          >
+          <p style="color: #95a5a6; margin-top: 10px">Keranjang kosong</p>
+          <p style="color: #bdc3c7; font-size: 12px">
+            Cari barang di atas untuk memulai transaksi
+          </p>
+        </div>
+
+        <div
+          id="list-keranjang"
+          class="card"
+          style="border-radius: 12px; margin-bottom: 10px; display: none"
+        >
+          <div
+            class="list list-strong-ios list-dividers-ios media-list"
+            style="margin: 0"
+          >
+            <ul id="ul-keranjang"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="bottom-bar"
+      class="toolbar toolbar-bottom"
+      style="
+        background-color: white;
+        border-top: 1px solid #ecf0f1;
+        padding: 10px 15px;
+        display: none;
+      "
+    >
+      <div
+        class="toolbar-inner"
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <div>
+          <div style="font-size: 11px; color: #7f8c8d">TOTAL</div>
+          <div
+            id="txt-total"
+            style="font-size: 22px; font-weight: bold; color: #2c3e50"
+          >
+            Rp 0
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px">
+          <button
+            class="button button-fill button-round"
+            style="background-color: #3498db"
+            id="btn-tunai"
+          >
+            <i class="icon material-icons">payments</i> Tunai
+          </button>
+          <button
+            class="button button-fill button-round"
+            style="background-color: #e67e22"
+            id="btn-bon"
+          >
+            <i class="icon material-icons">receipt</i> Bon
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sheet Tunai -->
+    <div class="sheet-modal demo-sheet-tunai" style="height: auto">
+      <div class="sheet-modal-inner">
+        <div class="swipe-handler"></div>
+        <div class="page-content" style="padding: 20px">
+          <div
+            style="
+              text-align: center;
+              font-weight: bold;
+              font-size: 18px;
+              margin-bottom: 20px;
+            "
+          >
+            Pembayaran Tunai
+          </div>
+          <div style="text-align: center; margin-bottom: 20px">
+            <div style="color: #7f8c8d; font-size: 14px">Total Pembayaran</div>
+            <div
+              id="txt-total-tunai"
+              style="font-size: 32px; font-weight: bold; color: #2c3e50"
+            >
+              Rp 0
+            </div>
+          </div>
+          <div
+            class="list list-strong-ios list-dividers-ios"
+            style="margin: 0 0 20px"
+          >
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-media">
+                  <i class="icon material-icons">payments</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input
+                      type="number"
+                      id="txt-uang-diterima"
+                      placeholder="Uang Diterima"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div
+            id="kembalian-box"
+            style="text-align: center; margin-bottom: 20px; display: none"
+          >
+            <div style="color: #7f8c8d; font-size: 14px">Kembalian</div>
+            <div
+              id="txt-kembalian"
+              style="font-size: 28px; font-weight: bold; color: #27ae60"
+            >
+              Rp 0
+            </div>
+          </div>
+          <button
+            class="button button-fill button-round button-large"
+            style="background-color: #27ae60"
+            id="btn-proses-tunai"
+          >
+            <i class="icon material-icons">check</i> Selesaikan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sheet Bon -->
+    <div class="sheet-modal demo-sheet-bon" style="height: auto">
+      <div class="sheet-modal-inner">
+        <div class="swipe-handler"></div>
+        <div class="page-content" style="padding: 20px">
+          <div
+            style="
+              text-align: center;
+              font-weight: bold;
+              font-size: 18px;
+              margin-bottom: 20px;
+            "
+          >
+            Pembayaran Bon
+          </div>
+          <div style="text-align: center; margin-bottom: 20px">
+            <div style="color: #7f8c8d; font-size: 14px">Total</div>
+            <div
+              id="txt-total-bon"
+              style="font-size: 32px; font-weight: bold; color: #2c3e50"
+            >
+              Rp 0
+            </div>
+          </div>
+          <div style="font-weight: bold; margin-bottom: 10px; color: #2c3e50">
+            Pilih Pelanggan:
+          </div>
+          <div class="card" style="border-radius: 12px; margin-bottom: 15px">
+            <div
+              class="list list-strong-ios list-dividers-ios"
+              style="margin: 0"
+            >
+              <ul id="ul-pelanggan-bon"></ul>
+            </div>
+          </div>
+          <button
+            class="button button-fill button-round"
+            style="background-color: #f39c12; margin-bottom: 10px"
+            id="btn-pelanggan-baru"
+          >
+            <i class="icon material-icons">person_add</i> Pelanggan Baru
+          </button>
+          <button
+            class="button button-fill button-round button-large"
+            style="background-color: #e67e22"
+            id="btn-proses-bon"
+            disabled
+          >
+            <i class="icon material-icons">check</i> Simpan Bon
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sheet Pelanggan Baru -->
+    <div class="sheet-modal demo-sheet-pelanggan-baru" style="height: auto">
+      <div class="sheet-modal-inner">
+        <div class="swipe-handler"></div>
+        <div class="page-content" style="padding: 20px">
+          <div
+            style="
+              font-weight: bold;
+              font-size: 18px;
+              margin-bottom: 20px;
+              text-align: center;
+            "
+          >
+            <i class="icon material-icons">person_add</i> Pelanggan Baru
+          </div>
+          <div
+            class="list list-strong-ios list-dividers-ios"
+            style="margin: 0 0 20px"
+          >
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-media">
+                  <i class="icon material-icons">person</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input
+                      type="text"
+                      id="txt-nama-pelanggan"
+                      placeholder="Nama Pelanggan"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">phone</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input
+                      type="tel"
+                      id="txt-nohp-pelanggan"
+                      placeholder="No HP"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <button
+            class="button button-fill button-round button-large"
+            style="background-color: #27ae60"
+            id="btn-simpan-pelanggan"
+          >
+            <i class="icon material-icons">check</i> Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import {
+    barang as barangApi,
+    transaksi as transaksiApi,
+    pelanggan as pelangganApi,
+  } from "../js/api.js";
+  import { formatRupiah } from "../js/function.js";
+
+  export default (props, { $, $f7, $store, $on }) => {
+    let sheetTunai, sheetBon, sheetPelangganBaru;
+    let keranjang = [];
+    let selectedPelanggan = null;
+
+    const renderKeranjang = () => {
+      const ul = $("#ul-keranjang");
+      ul.empty();
+
+      if (keranjang.length === 0) {
+        $("#empty-keranjang").show();
+        $("#list-keranjang").hide();
+        $("#bottom-bar").hide();
+        $("#btn-kosongkan").hide();
+      } else {
+        $("#empty-keranjang").hide();
+        $("#list-keranjang").show();
+        $("#bottom-bar").show();
+        $("#btn-kosongkan").show();
+
+        keranjang.forEach((item, index) => {
+          ul.append(`
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title-row">
+                  <div class="item-title" style="font-weight: bold; font-size: 14px;">${item.nama_barang}</div>
+                  <div class="item-after">
+                    <a href="#" class="btn-hapus-item" data-index="${index}" style="color: #e74c3c;">
+                      <i class="icon material-icons">delete</i>
+                    </a>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 5px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <a href="#" class="btn-kurang" data-index="${index}" class="button button-small button-outline" style="width: 30px; height: 30px; min-width: 30px; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #ccc; text-decoration: none;">−</a>
+                    <span style="font-weight: bold; width: 30px; text-align: center;">${item.jumlah}</span>
+                    <a href="#" class="btn-tambah" data-index="${index}" class="button button-small button-fill" style="width: 30px; height: 30px; min-width: 30px; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background-color: #27ae60; color: white; text-decoration: none;">+</a>
+                  </div>
+                  <span style="font-weight: bold; color: #2c3e50;">Rp ${formatRupiah(item.subtotal)}</span>
+                </div>
+              </div>
+            </div>
+          </li>
+        `);
+        });
+
+        // Bind events
+        $(".btn-hapus-item")
+          .off("click")
+          .on("click", function (e) {
+            e.preventDefault();
+            const idx = parseInt($(this).data("index"));
+            keranjang.splice(idx, 1);
+            renderKeranjang();
+          });
+
+        $(".btn-tambah")
+          .off("click")
+          .on("click", function (e) {
+            e.preventDefault();
+            const idx = parseInt($(this).data("index"));
+            keranjang[idx].jumlah += 1;
+            keranjang[idx].subtotal =
+              keranjang[idx].jumlah * keranjang[idx].harga_satuan;
+            renderKeranjang();
+          });
+
+        $(".btn-kurang")
+          .off("click")
+          .on("click", function (e) {
+            e.preventDefault();
+            const idx = parseInt($(this).data("index"));
+            if (keranjang[idx].jumlah > 1) {
+              keranjang[idx].jumlah -= 1;
+              keranjang[idx].subtotal =
+                keranjang[idx].jumlah * keranjang[idx].harga_satuan;
+            } else {
+              keranjang.splice(idx, 1);
+            }
+            renderKeranjang();
+          });
+      }
+
+      const total = keranjang.reduce((sum, i) => sum + i.subtotal, 0);
+      $("#jml-keranjang").text(keranjang.length);
+      $("#txt-total").text("Rp " + formatRupiah(total));
+      $store.state.totalKeranjang = total;
+    };
+
+    const cariBarang = async (e) => {
+      const keyword = e.target.value.trim();
+      if (keyword.length < 2) {
+        $("#hasil-cari").hide();
+        return;
+      }
+
+      try {
+        const response = await barangApi.getAll({ search: keyword });
+        if (response.status === "sukses") {
+          const ul = $("#ul-hasil-cari");
+          ul.empty();
+          response.data.forEach((b, idx) => {
+            ul.append(`
+            <li>
+              <a href="#" class="item-link item-content btn-pilih-barang" data-idx="${idx}">
+                <div class="item-inner">
+                  <div class="item-title">
+                    <div style="font-weight: bold;">${b.nama}</div>
+                    <div style="font-size: 11px; color: #7f8c8d;">Stok: ${b.stok} • Rp ${formatRupiah(b.harga_jual)}</div>
+                  </div>
+                  <div class="item-after">
+                    <span style="background-color: #27ae60; color: white; padding: 4px 10px; border-radius: 15px; font-size: 12px;">+ Pilih</span>
+                  </div>
+                </div>
+              </a>
+            </li>
+          `);
+          });
+
+          $(".btn-pilih-barang")
+            .off("click")
+            .on("click", function (e) {
+              e.preventDefault();
+              const idx = parseInt($(this).data("idx"));
+              const b = response.data[idx];
+
+              const existing = keranjang.find((i) => i.barang_id === b.id);
+              if (existing) {
+                existing.jumlah += 1;
+                existing.subtotal = existing.jumlah * existing.harga_satuan;
+              } else {
+                keranjang.push({
+                  barang_id: b.id,
+                  nama_barang: b.nama,
+                  jumlah: 1,
+                  harga_satuan: b.harga_jual,
+                  subtotal: b.harga_jual,
+                });
+              }
+
+              $("#search-barang").val("");
+              $("#hasil-cari").hide();
+              renderKeranjang();
+            });
+
+          $("#hasil-cari").show();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const resetTransaksi = () => {
+      keranjang = [];
+      selectedPelanggan = null;
+      $("#search-barang").val("");
+      $("#hasil-cari").hide();
+      renderKeranjang();
+    };
+
+    const bayarTunai = () => {
+      $("#txt-total-tunai").text(
+        "Rp " + formatRupiah($store.state.totalKeranjang),
+      );
+      $("#txt-uang-diterima").val("");
+      $("#kembalian-box").hide();
+      $f7.sheet.open(".demo-sheet-tunai");
+    };
+
+    const hitungKembalian = () => {
+      const uang = parseInt($("#txt-uang-diterima").val()) || 0;
+      const total = $store.state.totalKeranjang;
+      if (uang > 0 && uang >= total) {
+        $("#kembalian-box").show();
+        $("#txt-kembalian").text("Rp " + formatRupiah(uang - total));
+      } else {
+        $("#kembalian-box").hide();
+      }
+    };
+
+    const prosesTunai = async () => {
+      const uang = parseInt($("#txt-uang-diterima").val()) || 0;
+      if (uang < $store.state.totalKeranjang) {
+        $f7.dialog.alert("Uang kurang", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Menyimpan...");
+      try {
+        const response = await transaksiApi.create({
+          jenis: "tunai",
+          items: keranjang.map((i) => ({
+            barang_id: i.barang_id,
+            jumlah: i.jumlah,
+            harga_satuan: i.harga_satuan,
+          })),
+          uang_diterima: uang,
+        });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          $f7.dialog.alert(
+            `Berhasil!<br>No: ${response.data.no_transaksi}<br>Kembalian: Rp ${formatRupiah(response.data.uang_kembalian)}`,
+            "Sukses",
+            () => {
+              $f7.sheet.close(".demo-sheet-tunai");
+              resetTransaksi();
+            },
+          );
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal", "Error");
+      }
+    };
+
+    const bayarBon = async () => {
+      try {
+        const response = await pelangganApi.getAll();
+        if (response.status === "sukses") {
+          $("#txt-total-bon").text(
+            "Rp " + formatRupiah($store.state.totalKeranjang),
+          );
+          const ul = $("#ul-pelanggan-bon");
+          ul.empty();
+          selectedPelanggan = null;
+          $("#btn-proses-bon").prop("disabled", true);
+
+          response.data.forEach((p, idx) => {
+            ul.append(`
+            <li>
+              <a href="#" class="item-link item-content btn-pilih-pelanggan" data-idx="${idx}">
+                <div class="item-media"><i class="icon material-icons">person</i></div>
+                <div class="item-inner">
+                  <div class="item-title">${p.nama}</div>
+                  <div class="item-after" style="font-size: 11px;">${p.no_hp || ""}</div>
+                </div>
+              </a>
+            </li>
+          `);
+          });
+
+          $(".btn-pilih-pelanggan")
+            .off("click")
+            .on("click", function (e) {
+              e.preventDefault();
+              const idx = parseInt($(this).data("idx"));
+              selectedPelanggan = response.data[idx];
+              $(".btn-pilih-pelanggan").css("background-color", "");
+              $(this).css("background-color", "#e8f5e9");
+              $("#btn-proses-bon").prop("disabled", false);
+            });
+
+          $f7.sheet.open(".demo-sheet-bon");
+        }
+      } catch (err) {
+        $f7.dialog.alert("Gagal ambil pelanggan", "Error");
+      }
+    };
+
+    const tambahPelangganBaru = () => {
+      $f7.sheet.open(".demo-sheet-pelanggan-baru");
+    };
+
+    const simpanPelangganBaru = async () => {
+      const nama = $("#txt-nama-pelanggan").val().trim();
+      const no_hp = $("#txt-nohp-pelanggan").val().trim();
+      if (!nama) {
+        $f7.dialog.alert("Nama wajib diisi", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Menyimpan...");
+      try {
+        const response = await pelangganApi.create({ nama, no_hp });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          selectedPelanggan = { id: response.data.id, nama, no_hp };
+          $f7.sheet.close(".demo-sheet-pelanggan-baru");
+          $("#btn-proses-bon").prop("disabled", false);
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal", "Error");
+      }
+    };
+
+    const prosesBon = async () => {
+      if (!selectedPelanggan) {
+        $f7.dialog.alert("Pilih pelanggan", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Menyimpan...");
+      try {
+        const response = await transaksiApi.create({
+          jenis: "bon",
+          items: keranjang.map((i) => ({
+            barang_id: i.barang_id,
+            jumlah: i.jumlah,
+            harga_satuan: i.harga_satuan,
+          })),
+          pelanggan_id: selectedPelanggan.id,
+        });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          $f7.dialog.alert(
+            `Bon berhasil!<br>No: ${response.data.no_transaksi}<br>Pelanggan: ${selectedPelanggan.nama}`,
+            "Sukses",
+            () => {
+              $f7.sheet.close(".demo-sheet-bon");
+              resetTransaksi();
+            },
+          );
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal", "Error");
+      }
+    };
+
+    $on("pageInit", () => {
+      keranjang = [];
+      renderKeranjang();
+
+      $("#search-barang").on("input", cariBarang);
+      $("#btn-reset").on("click", resetTransaksi);
+      $("#btn-kosongkan").on("click", resetTransaksi);
+      $("#btn-tunai").on("click", bayarTunai);
+      $("#btn-bon").on("click", bayarBon);
+      $("#txt-uang-diterima").on("input", hitungKembalian);
+      $("#btn-proses-tunai").on("click", prosesTunai);
+      $("#btn-proses-bon").on("click", prosesBon);
+      $("#btn-pelanggan-baru").on("click", tambahPelangganBaru);
+      $("#btn-simpan-pelanggan").on("click", simpanPelangganBaru);
+
+      sheetTunai = $f7.sheet.create({
+        el: ".demo-sheet-tunai",
+        swipeToClose: true,
+        backdrop: true,
+      });
+      sheetBon = $f7.sheet.create({
+        el: ".demo-sheet-bon",
+        swipeToClose: true,
+        backdrop: true,
+      });
+      sheetPelangganBaru = $f7.sheet.create({
+        el: ".demo-sheet-pelanggan-baru",
+        swipeToClose: true,
+        backdrop: true,
+      });
+    });
+
+    $on("pageBeforeRemove", () => {
+      if (sheetTunai) sheetTunai.destroy();
+      if (sheetBon) sheetBon.destroy();
+      if (sheetPelangganBaru) sheetPelangganBaru.destroy();
+    });
+
+    return $render;
+  };
+</script>

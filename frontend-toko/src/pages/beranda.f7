@@ -1,0 +1,381 @@
+<template>
+  <div class="page" data-name="beranda">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="title" style="color: white">BerkahPOS</div>
+        <div class="right">
+          <a
+            href="#"
+            class="link icon-only panel-open"
+            data-panel="left"
+            style="color: white"
+          >
+            <i class="icon material-icons">menu</i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div
+        style="
+          background-color: #34495e;
+          padding: 15px 20px 30px;
+          color: white;
+          border-radius: 0 0 20px 20px;
+        "
+      >
+        <div style="text-align: center; margin-bottom: 5px">
+          <span id="jam-digital" style="font-size: 32px; font-weight: bold"
+            >--:--:--</span
+          >
+        </div>
+        <div style="text-align: center; opacity: 0.8">
+          <span id="tanggal-digital">---</span>
+        </div>
+      </div>
+
+      <div style="margin: -15px 15px 0">
+        <div
+          class="card card-raised"
+          style="border-radius: 12px; margin-bottom: 12px"
+        >
+          <div class="card-content" style="padding: 16px">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <div>
+                <div
+                  style="
+                    font-size: 12px;
+                    color: #7f8c8d;
+                    text-transform: uppercase;
+                  "
+                >
+                  Penjualan Hari Ini
+                </div>
+                <div
+                  id="txt-penjualan"
+                  style="
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #2c3e50;
+                    margin-top: 4px;
+                  "
+                >
+                  Rp 0
+                </div>
+                <div
+                  id="txt-transaksi"
+                  style="font-size: 12px; color: #95a5a6; margin-top: 2px"
+                >
+                  0 transaksi
+                </div>
+              </div>
+              <div
+                style="
+                  background-color: #e8f5e9;
+                  padding: 12px;
+                  border-radius: 50%;
+                "
+              >
+                <i
+                  class="icon material-icons"
+                  style="color: #27ae60; font-size: 36px"
+                  >trending_up</i
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-50" style="padding-right: 6px">
+            <div
+              class="card card-raised"
+              style="border-radius: 12px; margin-bottom: 12px"
+            >
+              <div
+                class="card-content"
+                style="padding: 14px; text-align: center"
+              >
+                <div
+                  style="
+                    background-color: #fff3e0;
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    margin: 0 auto 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <i class="icon material-icons" style="color: #f39c12"
+                    >savings</i
+                  >
+                </div>
+                <div style="font-size: 11px; color: #7f8c8d">Laba Kotor</div>
+                <div
+                  id="txt-laba"
+                  style="font-size: 16px; font-weight: bold; color: #2c3e50"
+                >
+                  Rp 0
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-50" style="padding-left: 6px">
+            <div
+              class="card card-raised"
+              style="border-radius: 12px; margin-bottom: 12px"
+            >
+              <div
+                class="card-content"
+                style="padding: 14px; text-align: center"
+              >
+                <div
+                  style="
+                    background-color: #fce4ec;
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    margin: 0 auto 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <i class="icon material-icons" style="color: #e74c3c"
+                    >receipt_long</i
+                  >
+                </div>
+                <div style="font-size: 11px; color: #7f8c8d">Piutang</div>
+                <div
+                  id="txt-piutang"
+                  style="font-size: 16px; font-weight: bold; color: #2c3e50"
+                >
+                  0 orang
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-50" style="padding-right: 6px">
+            <div
+              class="card card-raised"
+              style="border-radius: 12px; margin-bottom: 12px"
+            >
+              <div
+                class="card-content"
+                style="padding: 14px; text-align: center"
+              >
+                <div
+                  style="
+                    background-color: #fff8e1;
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    margin: 0 auto 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <i class="icon material-icons" style="color: #ff9800"
+                    >warning</i
+                  >
+                </div>
+                <div style="font-size: 11px; color: #7f8c8d">Stok Menipis</div>
+                <div
+                  id="txt-stok-menipis"
+                  style="font-size: 16px; font-weight: bold; color: #e74c3c"
+                >
+                  0 item
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-50" style="padding-left: 6px">
+            <div
+              class="card card-raised"
+              style="border-radius: 12px; margin-bottom: 12px"
+            >
+              <div
+                class="card-content"
+                style="padding: 14px; text-align: center"
+              >
+                <div
+                  style="
+                    background-color: #e3f2fd;
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    margin: 0 auto 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <i class="icon material-icons" style="color: #2196f3"
+                    >inventory_2</i
+                  >
+                </div>
+                <div style="font-size: 11px; color: #7f8c8d">Total Barang</div>
+                <div
+                  id="txt-total-barang"
+                  style="font-size: 16px; font-weight: bold; color: #2c3e50"
+                >
+                  0 item
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="card card-raised"
+          style="border-radius: 12px; margin-bottom: 12px"
+        >
+          <div
+            class="card-header"
+            style="font-weight: bold; font-size: 14px; color: #2c3e50"
+          >
+            🕐 Transaksi Terbaru
+          </div>
+          <div class="card-content" style="padding: 0">
+            <div
+              id="list-transaksi"
+              class="list list-strong-ios list-dividers-ios"
+              style="margin: 0"
+            >
+              <ul id="ul-transaksi"></ul>
+            </div>
+            <div
+              id="empty-transaksi"
+              style="text-align: center; padding: 20px; color: #95a5a6"
+            >
+              <i class="icon material-icons" style="font-size: 48px"
+                >receipt_long</i
+              >
+              <p>Belum ada transaksi hari ini</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { laporan } from "../js/api.js";
+  import { formatRupiah } from "../js/function.js";
+
+  export default (props, { $, $f7, $store, $on }) => {
+    let timerJam;
+
+    const loadDashboard = async () => {
+      try {
+        const response = await laporan.getDashboard();
+        if (response.status === "sukses") {
+          const d = response.data;
+          $store.state.dashboard = d;
+
+          $("#txt-penjualan").text(
+            "Rp " + formatRupiah(d.hari_ini.total_penjualan),
+          );
+          $("#txt-transaksi").text(d.hari_ini.total_transaksi + " transaksi");
+          $("#txt-laba").text("Rp " + formatRupiah(d.hari_ini.laba_kotor));
+          $("#txt-piutang").text(d.piutang.total_pelanggan + " orang");
+          $("#txt-stok-menipis").text(d.stok.stok_menipis + " item");
+          $("#txt-total-barang").text(d.stok.total_barang + " item");
+
+          // Transaksi terbaru
+          const ul = $("#ul-transaksi");
+          ul.empty();
+
+          if (d.transaksi_terbaru.length === 0) {
+            $("#empty-transaksi").show();
+          } else {
+            $("#empty-transaksi").hide();
+            d.transaksi_terbaru.forEach((t) => {
+              ul.append(`
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title">
+                      <div style="font-weight: bold; font-size: 14px;">${t.no_transaksi}</div>
+                      <div style="font-size: 11px; color: #7f8c8d;">${t.kasir}</div>
+                    </div>
+                    <div class="item-after">
+                      <span style="font-weight: bold; color: ${t.jenis === "bon" ? "#e74c3c" : "#27ae60"};">
+                        Rp ${formatRupiah(t.total)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            `);
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Gagal load dashboard:", err);
+      }
+    };
+
+    const updateJam = () => {
+      const sekarang = new Date();
+      const jam = String(sekarang.getHours()).padStart(2, "0");
+      const menit = String(sekarang.getMinutes()).padStart(2, "0");
+      const detik = String(sekarang.getSeconds()).padStart(2, "0");
+      const hari = [
+        "Minggu",
+        "Senin",
+        "Selasa",
+        "Rabu",
+        "Kamis",
+        "Jumat",
+        "Sabtu",
+      ];
+      const bulan = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
+      ];
+
+      $("#jam-digital").text(`${jam}:${menit}:${detik}`);
+      $("#tanggal-digital").text(
+        `${hari[sekarang.getDay()]}, ${sekarang.getDate()} ${bulan[sekarang.getMonth()]} ${sekarang.getFullYear()}`,
+      );
+    };
+
+    $on("pageInit", () => {
+      loadDashboard();
+      updateJam();
+      timerJam = setInterval(updateJam, 1000);
+    });
+
+    $on("tabShow", () => {
+      loadDashboard();
+    });
+    $on("pageBeforeOut", () => {
+      clearInterval(timerJam);
+    });
+
+    return $render;
+  };
+</script>

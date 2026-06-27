@@ -1,0 +1,305 @@
+<template>
+  <div class="page" data-name="stok-masuk">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Stok Masuk</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div style="margin: 15px">
+        <div style="text-align: center; margin-bottom: 20px">
+          <i class="icon material-icons" style="font-size: 60px; color: #27ae60"
+            >move_to_inbox</i
+          >
+          <p style="color: #7f8c8d; font-size: 13px">
+            Input barang masuk dari supplier
+          </p>
+        </div>
+
+        <div class="card" style="border-radius: 12px">
+          <div class="card-header" style="font-weight: bold; color: #2c3e50">
+            Tambah Item
+          </div>
+          <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-media">
+                  <i class="icon material-icons">inventory_2</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input
+                      type="text"
+                      id="cari-barang-masuk"
+                      placeholder="Cari barang..."
+                      autocomplete="off"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div
+            id="hasil-cari-stok"
+            class="list list-strong-ios list-dividers-ios"
+            style="
+              margin: 0;
+              max-height: 200px;
+              overflow-y: auto;
+              display: none;
+            "
+          >
+            <ul id="ul-hasil-cari-stok"></ul>
+          </div>
+
+          <div
+            id="selected-barang-masuk"
+            style="padding: 10px 16px; background-color: #e8f5e9; display: none"
+          >
+            <span id="nama-selected-masuk" style="font-weight: bold"></span>
+            <span
+              id="stok-selected-masuk"
+              style="font-size: 11px; color: #7f8c8d"
+            ></span>
+          </div>
+
+          <div id="form-item-masuk" style="padding: 0 16px 10px; display: none">
+            <div class="row">
+              <div class="col-50" style="padding-right: 5px">
+                <div
+                  style="font-size: 11px; color: #7f8c8d; margin-bottom: 3px"
+                >
+                  Jumlah
+                </div>
+                <input
+                  type="number"
+                  id="txt-jumlah-masuk"
+                  placeholder="0"
+                  class="input input-outline"
+                  style="width: 100%"
+                />
+              </div>
+              <div class="col-50" style="padding-left: 5px">
+                <div
+                  style="font-size: 11px; color: #7f8c8d; margin-bottom: 3px"
+                >
+                  Harga Modal Baru
+                </div>
+                <input
+                  type="number"
+                  id="txt-harga-masuk"
+                  placeholder="0"
+                  class="input input-outline"
+                  style="width: 100%"
+                />
+              </div>
+            </div>
+            <button
+              class="button button-fill button-round"
+              style="background-color: #27ae60; margin-top: 10px; width: 100%"
+              id="btn-tambah-item"
+            >
+              <i class="icon material-icons">add</i> Tambah ke List
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="card-items-masuk"
+          class="card"
+          style="border-radius: 12px; margin-top: 15px; display: none"
+        >
+          <div class="card-header" style="font-weight: bold; color: #2c3e50">
+            Items (<span id="jml-items-masuk">0</span>)
+          </div>
+          <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+            <ul id="ul-items-masuk"></ul>
+          </div>
+        </div>
+
+        <button
+          class="button button-fill button-round button-large"
+          style="background-color: #27ae60; margin-top: 20px; display: none"
+          id="btn-simpan-masuk"
+        >
+          <i class="icon material-icons">check</i> Simpan Stok Masuk
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { barang as barangApi, stok as stokApi } from "../js/api.js";
+  import { formatRupiah } from "../js/function.js";
+
+  export default (props, { $, $f7, $store }) => {
+    let stokMasukItems = [];
+    let selectedBarang = null;
+
+    const renderItems = () => {
+      const ul = $("#ul-items-masuk");
+      ul.empty();
+
+      if (stokMasukItems.length === 0) {
+        $("#card-items-masuk").hide();
+        $("#btn-simpan-masuk").hide();
+      } else {
+        $("#card-items-masuk").show();
+        $("#btn-simpan-masuk").show();
+        $("#jml-items-masuk").text(stokMasukItems.length);
+
+        stokMasukItems.forEach((item, idx) => {
+          ul.append(`
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title">
+                  <div style="font-weight: bold;">${item.nama_barang}</div>
+                  <div style="font-size: 11px; color: #7f8c8d;">${item.jumlah} ${item.satuan} • Rp ${formatRupiah(item.harga_modal)}</div>
+                </div>
+                <div class="item-after">
+                  <a href="#" class="btn-hapus-item-masuk" data-idx="${idx}" style="color: #e74c3c;">
+                    <i class="icon material-icons">delete</i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+        `);
+        });
+
+        $(".btn-hapus-item-masuk")
+          .off("click")
+          .on("click", function (e) {
+            e.preventDefault();
+            const idx = parseInt($(this).data("idx"));
+            stokMasukItems.splice(idx, 1);
+            renderItems();
+          });
+      }
+    };
+
+    const cariBarang = async (e) => {
+      const keyword = e.target.value.trim();
+      if (keyword.length < 2) {
+        $("#hasil-cari-stok").hide();
+        return;
+      }
+
+      try {
+        const response = await barangApi.getAll({ search: keyword });
+        if (response.status === "sukses") {
+          const ul = $("#ul-hasil-cari-stok");
+          ul.empty();
+
+          response.data.forEach((b, idx) => {
+            ul.append(`
+            <li>
+              <a href="#" class="item-link item-content btn-pilih-masuk" data-idx="${idx}">
+                <div class="item-inner">
+                  <div class="item-title">${b.nama}</div>
+                  <div class="item-after" style="font-size: 11px;">Stok: ${b.stok}</div>
+                </div>
+              </a>
+            </li>
+          `);
+          });
+
+          $(".btn-pilih-masuk")
+            .off("click")
+            .on("click", function (e) {
+              e.preventDefault();
+              const idx = parseInt($(this).data("idx"));
+              selectedBarang = response.data[idx];
+
+              $("#nama-selected-masuk").text(selectedBarang.nama);
+              $("#stok-selected-masuk").text(
+                " (Stok: " + selectedBarang.stok + ")",
+              );
+              $("#selected-barang-masuk").show();
+              $("#form-item-masuk").show();
+              $("#hasil-cari-stok").hide();
+              $("#cari-barang-masuk").val(selectedBarang.nama);
+            });
+
+          $("#hasil-cari-stok").show();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const tambahItem = () => {
+      const jumlah = parseInt($("#txt-jumlah-masuk").val()) || 0;
+      const harga_modal = parseFloat($("#txt-harga-masuk").val()) || 0;
+
+      if (!jumlah || jumlah <= 0) {
+        $f7.dialog.alert("Jumlah wajib diisi", "Error");
+        return;
+      }
+
+      stokMasukItems.push({
+        barang_id: selectedBarang.id,
+        nama_barang: selectedBarang.nama,
+        satuan: selectedBarang.satuan,
+        jumlah: jumlah,
+        harga_modal: harga_modal,
+      });
+
+      selectedBarang = null;
+      $("#cari-barang-masuk").val("");
+      $("#txt-jumlah-masuk").val("");
+      $("#txt-harga-masuk").val("");
+      $("#selected-barang-masuk").hide();
+      $("#form-item-masuk").hide();
+      renderItems();
+    };
+
+    const simpanStokMasuk = async () => {
+      if (stokMasukItems.length === 0) {
+        $f7.dialog.alert("Tidak ada item", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Menyimpan...");
+      try {
+        const response = await stokApi.masuk({
+          items: stokMasukItems.map((i) => ({
+            barang_id: i.barang_id,
+            jumlah: i.jumlah,
+            harga_modal: i.harga_modal || undefined,
+          })),
+        });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          $f7.dialog.alert("Stok masuk berhasil disimpan", "Sukses", () => {
+            stokMasukItems = [];
+            renderItems();
+            $f7.back();
+          });
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal", "Error");
+      }
+    };
+
+    $f7.on("pageInit", () => {
+      $("#cari-barang-masuk").on("input", cariBarang);
+      $("#btn-tambah-item").on("click", tambahItem);
+      $("#btn-simpan-masuk").on("click", simpanStokMasuk);
+    });
+
+    return $render;
+  };
+</script>

@@ -1,0 +1,142 @@
+<template>
+  <div class="page" data-name="laporan-barang">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Laporan Per Barang</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div style="margin: 15px 15px 0">
+        <div class="row">
+          <div class="col-50" style="padding-right: 5px">
+            <div style="font-size: 11px; color: #7f8c8d; margin-bottom: 3px">
+              Dari Tanggal
+            </div>
+            <input
+              type="date"
+              id="txt-dari-barang"
+              class="input input-outline"
+              style="width: 100%; background: white"
+            />
+          </div>
+          <div class="col-50" style="padding-left: 5px">
+            <div style="font-size: 11px; color: #7f8c8d; margin-bottom: 3px">
+              Sampai Tanggal
+            </div>
+            <input
+              type="date"
+              id="txt-sampai-barang"
+              class="input input-outline"
+              style="width: 100%; background: white"
+            />
+          </div>
+        </div>
+        <button
+          class="button button-fill button-round"
+          style="background-color: #3498db; margin-top: 8px; width: 100%"
+          id="btn-tampilkan-barang"
+        >
+          <i class="icon material-icons">search</i> Tampilkan
+        </button>
+      </div>
+
+      <div
+        id="loading-laporan-barang"
+        style="text-align: center; padding: 50px; display: none"
+      >
+        <div class="preloader"></div>
+      </div>
+
+      <div
+        id="empty-laporan-barang"
+        style="text-align: center; padding: 30px; display: none"
+      >
+        <i class="icon material-icons" style="font-size: 60px; color: #bdc3c7"
+          >inventory_2</i
+        >
+        <p style="color: #95a5a6">Tidak ada data penjualan</p>
+      </div>
+
+      <div id="list-laporan-barang" style="margin: 15px"></div>
+
+      <div id="info-laporan-barang" style="text-align: center; padding: 50px">
+        <i class="icon material-icons" style="font-size: 60px; color: #bdc3c7"
+          >bar_chart</i
+        >
+        <p style="color: #95a5a6">Pilih filter tanggal dan tampilkan</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { laporan as laporanApi } from "../js/api.js";
+  import { formatRupiah } from "../js/function.js";
+
+  export default (props, { $, $f7 }) => {
+    const loadLaporan = async () => {
+      const dari = $("#txt-dari-barang").val();
+      const sampai = $("#txt-sampai-barang").val();
+
+      $("#loading-laporan-barang").show();
+      $("#info-laporan-barang").hide();
+      $("#empty-laporan-barang").hide();
+      $("#list-laporan-barang").empty();
+
+      try {
+        const params = {};
+        if (dari) params.dari = dari;
+        if (sampai) params.sampai = sampai;
+        const response = await laporanApi.getPerBarang(params);
+        if (response.status === "sukses") {
+          const data = response.data;
+
+          if (data.length === 0) {
+            $("#empty-laporan-barang").show();
+          } else {
+            const container = $("#list-laporan-barang");
+            data.forEach((item) => {
+              container.append(`
+              <div class="card" style="border-radius: 12px; margin-bottom: 8px;">
+                <div class="card-content" style="padding: 14px 16px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-weight: bold; font-size: 15px;">${item.nama_barang}</div>
+                      <div style="font-size: 12px; color: #7f8c8d; margin-top: 3px;">
+                        Terjual: ${item.total_qty} ${item.satuan} • ${item.total_transaksi} transaksi
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-weight: bold; font-size: 16px; color: #27ae60;">Rp ${formatRupiah(item.total_penjualan)}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `);
+            });
+          }
+        }
+      } catch (err) {
+        $f7.dialog.alert("Gagal mengambil laporan", "Error");
+      }
+
+      $("#loading-laporan-barang").hide();
+    };
+
+    $f7.on("pageInit", () => {
+      const today = new Date().toISOString().slice(0, 10);
+      $("#txt-dari-barang").val(today);
+      $("#txt-sampai-barang").val(today);
+      $("#btn-tampilkan-barang").on("click", loadLaporan);
+    });
+
+    return $render;
+  };
+</script>

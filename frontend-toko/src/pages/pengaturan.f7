@@ -1,0 +1,341 @@
+<template>
+  <div class="page" data-name="pengaturan">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Pengaturan</div>
+      </div>
+    </div>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div
+        class="card"
+        style="margin: 15px; border-radius: 12px; text-align: center"
+      >
+        <div class="card-content" style="padding: 20px">
+          <i class="icon material-icons" style="font-size: 60px; color: #34495e"
+            >account_circle</i
+          >
+          <div
+            id="profile-nama"
+            style="
+              font-weight: bold;
+              font-size: 18px;
+              color: #2c3e50;
+              margin-top: 5px;
+            "
+          ></div>
+          <span
+            id="profile-role"
+            class="badge"
+            style="
+              background-color: #34495e;
+              padding: 4px 12px;
+              margin-top: 5px;
+            "
+          ></span>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 15px; border-radius: 12px">
+        <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+          <ul>
+            <li>
+              <a href="#" class="item-link item-content" id="btn-ubah-password">
+                <div class="item-media">
+                  <i class="icon material-icons">lock</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">Ubah Password</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="item-link item-content" id="btn-sinkron">
+                <div class="item-media">
+                  <i class="icon material-icons">sync</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">Sinkron Data</div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 15px; border-radius: 12px">
+        <div class="list list-strong-ios list-dividers-ios" style="margin: 0">
+          <ul>
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="icon material-icons">info</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">Versi Aplikasi</div>
+                  <div class="item-after">1.0.0</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sheet Ubah Password -->
+    <div class="sheet-modal demo-sheet-password" style="height: auto">
+      <div class="sheet-modal-inner">
+        <div class="swipe-handler"></div>
+        <div class="page-content" style="padding: 20px">
+          <div
+            style="
+              font-weight: bold;
+              font-size: 18px;
+              margin-bottom: 20px;
+              text-align: center;
+            "
+          >
+            <i class="icon material-icons" style="vertical-align: middle"
+              >lock</i
+            >
+            Ubah Password
+          </div>
+          <div
+            class="list list-strong-ios list-dividers-ios"
+            style="margin: 0 0 20px"
+          >
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-media">
+                  <i class="icon material-icons">lock</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input
+                      type="password"
+                      id="txt-password-lama"
+                      placeholder="Password Lama"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="item-content item-input item-input-outline"
+                style="margin-top: 10px"
+              >
+                <div class="item-media">
+                  <i class="icon material-icons">lock_open</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input
+                      type="password"
+                      id="txt-password-baru"
+                      placeholder="Password Baru (min. 6)"
+                    />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <button
+            class="button button-fill button-round button-large"
+            style="background-color: #f39c12"
+            id="btn-simpan-password"
+          >
+            <i class="icon material-icons">check</i> Simpan Password
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sheet Sinkron -->
+    <div class="sheet-modal demo-sheet-sinkron" style="height: auto">
+      <div class="sheet-modal-inner">
+        <div class="swipe-handler"></div>
+        <div class="page-content" style="padding: 20px">
+          <div
+            style="
+              font-weight: bold;
+              font-size: 18px;
+              margin-bottom: 20px;
+              text-align: center;
+            "
+          >
+            <i class="icon material-icons">sync</i> Sinkron Data
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-around;
+              text-align: center;
+            "
+          >
+            <a
+              href="#"
+              class="link"
+              id="btn-backup"
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <i
+                class="icon material-icons"
+                style="font-size: 48px; color: #27ae60"
+                >cloud_upload</i
+              >
+              <span style="font-size: 14px; font-weight: bold; margin-top: 8px"
+                >Backup</span
+              >
+            </a>
+            <a
+              href="#"
+              class="link"
+              id="btn-restore"
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <i
+                class="icon material-icons"
+                style="font-size: 48px; color: #3498db"
+                >cloud_download</i
+              >
+              <span style="font-size: 14px; font-weight: bold; margin-top: 8px"
+                >Restore</span
+              >
+            </a>
+            <a
+              href="#"
+              class="link"
+              id="btn-hapus-data"
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <i
+                class="icon material-icons"
+                style="font-size: 48px; color: #e74c3c"
+                >delete_forever</i
+              >
+              <span style="font-size: 14px; font-weight: bold; margin-top: 8px"
+                >Hapus</span
+              >
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { user as userApi } from "../js/api.js";
+
+  export default (props, { $, $f7, $store }) => {
+    let sheetPassword, sheetSinkron;
+
+    const setupProfile = () => {
+      const user = $store.state.user;
+      if (user) {
+        $("#profile-nama").text(user.nama_lengkap);
+        $("#profile-role").text(user.role.toUpperCase());
+      }
+    };
+
+    const ubahPassword = async () => {
+      const password_lama = $("#txt-password-lama").val().trim();
+      const password_baru = $("#txt-password-baru").val().trim();
+
+      if (!password_lama || !password_baru) {
+        $f7.dialog.alert("Semua field wajib diisi", "Error");
+        return;
+      }
+      if (password_baru.length < 6) {
+        $f7.dialog.alert("Password baru minimal 6 karakter", "Error");
+        return;
+      }
+
+      $f7.dialog.preloader("Menyimpan...");
+      try {
+        const response = await userApi.ubahPassword({
+          password_lama,
+          password_baru,
+        });
+        $f7.dialog.close();
+        if (response.status === "sukses") {
+          $f7.dialog.alert("Password berhasil diubah", "Sukses", () => {
+            $f7.sheet.close(".demo-sheet-password");
+            $("#txt-password-lama").val("");
+            $("#txt-password-baru").val("");
+          });
+        }
+      } catch (err) {
+        $f7.dialog.close();
+        $f7.dialog.alert(err.message || "Gagal", "Error");
+      }
+    };
+
+    $f7.on("pageInit", () => {
+      setupProfile();
+
+      sheetPassword = $f7.sheet.create({
+        el: ".demo-sheet-password",
+        swipeToClose: true,
+        backdrop: true,
+      });
+      sheetSinkron = $f7.sheet.create({
+        el: ".demo-sheet-sinkron",
+        swipeToClose: true,
+        backdrop: true,
+      });
+
+      $("#btn-ubah-password").on("click", () => {
+        $f7.sheet.open(".demo-sheet-password");
+      });
+      $("#btn-sinkron").on("click", () => {
+        $f7.sheet.open(".demo-sheet-sinkron");
+      });
+      $("#btn-simpan-password").on("click", ubahPassword);
+
+      $("#btn-backup").on("click", () => {
+        $f7.dialog.alert(
+          "Fitur backup akan mengirim data ke server.",
+          "Backup",
+          () => {
+            $f7.sheet.close(".demo-sheet-sinkron");
+          },
+        );
+      });
+
+      $("#btn-restore").on("click", () => {
+        $f7.dialog.confirm(
+          "Restore akan menimpa data saat ini. Yakin?",
+          "Restore",
+          () => {
+            $f7.sheet.close(".demo-sheet-sinkron");
+          },
+        );
+      });
+
+      $("#btn-hapus-data").on("click", () => {
+        $f7.dialog.confirm(
+          "Semua data akan dihapus permanen. Yakin?",
+          "Hapus Data",
+          () => {
+            $f7.sheet.close(".demo-sheet-sinkron");
+          },
+        );
+      });
+    });
+
+    $f7.on("pageBeforeRemove", () => {
+      if (sheetPassword) sheetPassword.destroy();
+      if (sheetSinkron) sheetSinkron.destroy();
+    });
+
+    return $render;
+  };
+</script>

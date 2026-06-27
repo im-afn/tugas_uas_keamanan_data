@@ -1,0 +1,194 @@
+<template>
+  <div class="page" data-name="barang">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding" style="background-color: #34495e">
+        <div class="left">
+          <a href="#" class="link back" style="color: white">
+            <i class="icon material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title" style="color: white">Data Barang</div>
+        <div class="right">
+          <a href="/barang/tambah/" class="link icon-only" style="color: white">
+            <i class="icon material-icons">add_circle</i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <form
+      class="searchbar searchbar-init"
+      style="
+        margin: 10px 15px;
+        --f7-searchbar-bg-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <div class="searchbar-inner">
+        <div class="searchbar-input-wrap">
+          <input
+            type="search"
+            placeholder="Cari barang..."
+            id="search-barang-list"
+            autocomplete="off"
+          />
+          <i class="searchbar-icon"></i>
+          <span class="input-clear-button"></span>
+        </div>
+      </div>
+    </form>
+
+    <div class="page-content" style="background-color: #f5f6fa">
+      <div
+        id="loading-barang"
+        style="text-align: center; padding: 50px; display: none"
+      >
+        <div class="preloader"></div>
+        <p style="color: #95a5a6">Memuat data...</p>
+      </div>
+
+      <div
+        id="empty-barang"
+        style="text-align: center; padding: 50px; display: none"
+      >
+        <i class="icon material-icons" style="font-size: 60px; color: #bdc3c7"
+          >inventory_2</i
+        >
+        <p style="color: #95a5a6">Tidak ada data barang</p>
+      </div>
+
+      <div id="list-barang" style="margin: 0 15px"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { barang as barangApi } from "../js/api.js";
+  import { formatRupiah } from "../js/function.js";
+
+  export default (props, { $, $f7, $store, $on }) => {
+    let daftarBarang = [];
+
+    const renderBarang = () => {
+      const container = $("#list-barang");
+      container.empty();
+
+      if (daftarBarang.length === 0) {
+        $("#empty-barang").show();
+        return;
+      }
+
+      $("#empty-barang").hide();
+
+      daftarBarang.forEach((b, idx) => {
+        const stokColor =
+          b.stok <= 0
+            ? "#e74c3c"
+            : b.stok <= b.stok_minimal
+              ? "#f39c12"
+              : "#27ae60";
+        const badgeHabis =
+          b.stok <= 0
+            ? '<span class="badge" style="background-color: #e74c3c; font-size: 10px;">Habis</span>'
+            : "";
+        const badgeMenipis =
+          b.stok > 0 && b.stok <= b.stok_minimal
+            ? '<span class="badge" style="background-color: #f39c12; font-size: 10px;">Menipis</span>'
+            : "";
+        const isAdmin = $store.state.user?.role === "admin";
+
+        container.append(`
+        <div class="card" style="border-radius: 12px; margin-bottom: 8px;">
+          <div class="card-content" style="padding: 12px 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 5px;">
+                  <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">${b.nama}</span>
+                  ${badgeHabis} ${badgeMenipis}
+                </div>
+                <div style="font-size: 11px; color: #7f8c8d; margin-top: 3px;">Kode: ${b.kode} • Satuan: ${b.satuan}</div>
+                <div style="display: flex; gap: 15px; margin-top: 5px;">
+                  <span style="font-size: 12px; color: #7f8c8d;">Stok: <b style="color: ${stokColor};">${b.stok}</b></span>
+                  <span style="font-size: 12px; color: #7f8c8d;">Modal: <b>Rp ${formatRupiah(b.harga_modal)}</b></span>
+                  <span style="font-size: 12px; color: #7f8c8d;">Jual: <b>Rp ${formatRupiah(b.harga_jual)}</b></span>
+                </div>
+              </div>
+              <div style="display: flex; gap: 5px;">
+                <a href="/barang/edit/${b.id}/" class="button button-small button-outline" style="border-radius: 50%; width: 32px; height: 32px; min-width: 32px; padding: 0;">
+                  <i class="icon material-icons" style="font-size: 16px;">edit</i>
+                </a>
+                ${
+                  isAdmin
+                    ? `
+                <a href="#" class="btn-hapus-barang button button-small button-outline" data-idx="${idx}" style="border-radius: 50%; width: 32px; height: 32px; min-width: 32px; padding: 0; color: #e74c3c; border-color: #e74c3c;">
+                  <i class="icon material-icons" style="font-size: 16px;">delete</i>
+                </a>`
+                    : ""
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      `);
+      });
+
+      $(".btn-hapus-barang")
+        .off("click")
+        .on("click", function (e) {
+          e.preventDefault();
+          const idx = parseInt($(this).data("idx"));
+          const barang = daftarBarang[idx];
+
+          $f7.dialog.confirm(
+            `Yakin hapus "${barang.nama}"?`,
+            "Hapus Barang",
+            async () => {
+              try {
+                const response = await barangApi.delete(barang.id);
+                if (response.status === "sukses") {
+                  $f7.dialog.alert("Barang berhasil dihapus", "Sukses");
+                  loadBarang();
+                }
+              } catch (err) {
+                $f7.dialog.alert(
+                  err.message || "Gagal menghapus barang",
+                  "Error",
+                );
+              }
+            },
+          );
+        });
+    };
+
+    const loadBarang = async (search = "") => {
+      $("#loading-barang").show();
+      $("#empty-barang").hide();
+      $("#list-barang").empty();
+
+      try {
+        const params = {};
+        if (search) params.search = search;
+        const response = await barangApi.getAll(params);
+        if (response.status === "sukses") {
+          daftarBarang = response.data;
+          renderBarang();
+        }
+      } catch (err) {
+        $f7.dialog.alert("Gagal mengambil data barang", "Error");
+      }
+
+      $("#loading-barang").hide();
+    };
+
+    $on("pageInit", () => {
+      loadBarang();
+      $("#search-barang-list").on("input", function () {
+        loadBarang(this.value.trim());
+      });
+    });
+
+    return $render;
+  };
+</script>
